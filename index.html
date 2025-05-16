@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Educacional para Ensino Domiciliar</title>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #6b8cbb;
+            --accent-color: #ff9a3c;
+            --light-color: #f5f7fa;
+            --dark-color: #2c3e50;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 25px;
+            height: 150vh;
+        }
+
+        .sidebar {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            height: auto;
+        }
+
+        .chat-container {
+            flex-grow: 1;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            height: calc(100vh - 210px);
+        }
+
+        .chat-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 18px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+
+        .chat-header h2 {
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 25px;
+            overflow-y: auto;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            max-width: 85%;
+        }
+
+        .user-message {
+            margin-left: auto;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: var(--border-radius) 0 var(--border-radius) var(--border-radius);
+            padding: 12px 18px;
+        }
+
+        .bot-message {
+            margin-right: auto;
+            background-color: var(--light-color);
+            border-radius: 0 var(--border-radius) var(--border-radius) var(--border-radius);
+            padding: 12px 18px;
+            white-space: pre-wrap;
+        }
+
+        .chat-input {
+            padding: 18px;
+            background-color: var(--light-color);
+            display: flex;
+            gap: 15px;
+        }
+
+        .chat-input input {
+            flex-grow: 1;
+            padding: 12px 18px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            outline: none;
+            font-size: 1.05rem;
+        }
+
+        .chat-input input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.2);
+        }
+
+        .chat-input button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .chat-input button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .lesson-form {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.2);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex-grow: 1;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+        }
+
+        .btn-danger:hover {
+            background-color: #bd2130;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .folder {
+            margin-bottom: 10px;
+        }
+
+        .folder-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: var(--light-color);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .folder-header:hover {
+            background-color: #e9ecef;
+        }
+
+        .folder-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding-left: 20px;
+        }
+
+        .folder-content.active {
+            max-height: 500px;
+        }
+
+        .lesson-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: white;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .lesson-item:hover {
+            background-color: var(--light-color);
+        }
+
+        .lesson-item-title {
+            flex-grow: 1;
+            cursor: pointer;
+        }
+
+        .lesson-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .lesson-actions button {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .send-button-content {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        #clearChat {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            border: 1px solid #ddd;
+            margin-left: 10px;
+        }
+        
+        #clearChat:hover {
+            background-color: #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Aulas por Etapa</h2>
+            <div id="folderContainer"></div>
+        </div>
+        <div class="content">
+            <div class="lesson-form">
+                <h2>Nova Aula</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="grade">Etapa</label>
+                        <select id="grade">
+                            <option value="Educação Infantil">Educação Infantil</option>
+                            <option value="1º Ano">1º Ano</option>
+                            <option value="2º Ano">2º Ano</option>
+                            <option value="3º Ano">3º Ano</option>
+                            <option value="4º Ano">4º Ano</option>
+                            <option value="5º Ano">5º Ano</option>
+                            <option value="6º Ano">6º Ano</option>
+                            <option value="7º Ano">7º Ano</option>
+                            <option value="8º Ano">8º Ano</option>
+                            <option value="9º Ano">9º Ano</option>
+                            <option value="Ensino Médio">Ensino Médio 1</option>
+                            <option value="Ensino Médio 2">Ensino Médio 2</option>
+                            <option value="Ensino Médio 3">Ensino Médio 3</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Matéria</label>
+                        <select id="subject">
+                            <option value="Matemática">Matemática</option>
+                            <option value="Português">Português</option>
+                            <option value="História">História</option>
+                            <option value="Geografia">Geografia</option>
+                            <option value="Ciências">Ciências</option>
+                            <option value="Educação Física">Educação Física</option>
+                            <option value="Artes">Artes</option>
+                            <option value="Inglês">Inglês</option>
+                            <option value="Física">Física</option>
+                            <option value="Química">Química</option>
+                            <option value="Biologia">Biologia</option>
+                            <option value="Sociologia">Sociologia</option>
+                            <option value="Filosofia">Filosofia</option>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="lessonTitle">Título da Aula</label>
+                    <input type="text" id="lessonTitle" placeholder="Ex: Frações, Revolução Industrial...">
+                </div>
+                <div class="form-group">
+                    <label for="perspective">Perspectiva da Aula</label>
+                    <select id="perspective">
+                        <option value="geral">Geral</option>
+                        <option value="desenvolvimento">Desenvolvimento Pessoal</option>
+                        <option value="cidadania">Cidadania</option>
+                        <option value="trabalho">Qualificação para o Trabalho</option>
+                    </select>
+                </div>
+                <button id="createLesson" class="btn">Criar Aula</button>
+            </div>
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h2 id="currentLessonTitle">Chatbot Educacional</h2>
+                    <button id="clearChat" class="btn">Limpar Chat</button>
+                </div>
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-input">
+                    <input type="text" id="messageInput" placeholder="Digite sua pergunta...">
+                    <button id="sendMessage">
+                        <div class="send-button-content">
+                            <span>Enviar</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
