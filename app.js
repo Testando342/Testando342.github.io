@@ -1,5 +1,5 @@
 // Configuração da API Gemini
-const API_URL = "http://localhost:3000/api/gemini";
+const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
 
 // Estado da aplicação
 let currentLesson = null;
