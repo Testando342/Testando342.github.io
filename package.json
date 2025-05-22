@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "netlify dev",
+    "build": "echo 'No build step required'"
   },
   "keywords": [],
   "author": "",
@@ -16,5 +17,9 @@
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "firebase": "^11.6.1"
+  },
+  "devDependencies": {
+    "@netlify/functions": "^2.38.0",
+    "netlify-cli": "^14.0.0"
   }
 }

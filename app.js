@@ -1,5 +1,5 @@
-// Configuração da API Gemini
-const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+// Configuração da API Gemini via Netlify Function
+const API_URL = "/.netlify/functions/gemini";
 
 // Estado da aplicação
 let currentLesson = null;
@@ -102,7 +102,7 @@ function startLessonConversation(lesson) {
     sendButtonContent.innerHTML = '<div class="loading"></div><span>Enviando...</span>';
     sendButton.disabled = true;
     
-    // Chamar a API Gemini
+    // Chamar a API Gemini via Netlify Function
     fetchGeminiResponse(prompt)
         .then(response => {
             addMessageToChat('bot', response);
@@ -187,9 +187,14 @@ async function fetchGeminiResponse(prompt) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                prompt: prompt // Send only the prompt to your backend
+                prompt: prompt
             })
         });
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Erro na API Gemini');
+        }
         
         const data = await response.json();
         
@@ -241,7 +246,7 @@ function sendMessage() {
     sendButtonContent.innerHTML = '<div class="loading"></div><span>Enviando...</span>';
     sendButton.disabled = true;
     
-    // Chamar a API Gemini
+    // Chamar a API Gemini via Netlify Function
     fetchGeminiResponse(prompt)
         .then(response => {
             addMessageToChat('bot', response);
