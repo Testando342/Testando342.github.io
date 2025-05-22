@@ -1,13 +1,60 @@
-// Docs on request and context https://docs.netlify.com/functions/build/#code-your-function-2
-export default (request, context) => {
-  try {
-    const url = new URL(request.url)
-    const subject = url.searchParams.get('name') || 'World'
+// netlify/functions/gemini.js
+const axios = require('axios');
 
-    return new Response(`Hello ${subject}`)
-  } catch (error) {
-    return new Response(error.toString(), {
-      status: 500,
-    })
+exports.handler = async function(event, context) {
+  // Only allow POST requests
+  if (event.httpMethod !== 'POST') {
+    return {
+      statusCode: 405,
+      body: JSON.stringify({ error: 'Method Not Allowed' }),
+      headers: { 'Allow': 'POST' }
+    };
   }
-}
+
+  try {
+    // Parse the request body
+    const requestBody = JSON.parse(event.body);
+    const prompt = requestBody.prompt;
+    
+    if (!prompt) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: 'Missing prompt parameter' })
+      };
+    }
+
+    const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+    
+    // Make the API call to Gemini
+    const response = await axios.post(`${API_URL}?key=${process.env.GEMINI_API_KEY}`, {
+      contents: [{
+        parts: [{
+          text: prompt
+        }]
+      }]
+    });
+    
+    // Return the response
+    return {
+      statusCode: 200,
+      body: JSON.stringify(response.data),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+    
+  } catch (error) {
+    console.error('Error proxying to Gemini API:', error);
+    
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ 
+        error: 'Failed to process request',
+        message: error.message 
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+  }
+};
