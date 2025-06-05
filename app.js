@@ -1,24 +1,6 @@
 // Configuração da API Gemini via Netlify Function
 const API_URL = "/.netlify/functions/gemini";
 
-// Dados para cascata de dropdowns
-const cascadeData = {
-    "Educação Infantil": {
-        "Matemática": ["Números básicos", "Formas geométricas"],
-        "Português": ["Alfabeto", "Primeiras palavras"]
-    },
-    "1º Ano": {
-        "Matemática": ["Adição simples", "Subtração básica"],
-        "Português": ["Sílabas", "Formação de palavras"],
-        "Ciências": ["Animais domésticos", "Plantas"]
-    },
-    "2º Ano": {
-        "Matemática": ["Tabuada do 2", "Problemas simples"],
-        "Português": ["Frases", "Pequenos textos"],
-        "História": ["Família", "Escola"]
-    }
-};
-
 // Estado da aplicação
 let currentLesson = null;
 let lessons = loadLessons();
@@ -32,9 +14,6 @@ let createLessonButton;
 let clearChatButton;
 let currentLessonTitle;
 let folderContainer;
-let gradeSelect;
-let subjectSelect;
-let lessonTitleSelect;
 
 // Inicialização após o DOM estar pronto
 document.addEventListener('DOMContentLoaded', () => {
@@ -46,9 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
     clearChatButton = document.getElementById('clearChat');
     currentLessonTitle = document.getElementById('currentLessonTitle');
     folderContainer = document.getElementById('folderContainer');
-    gradeSelect = document.getElementById('grade');
-    subjectSelect = document.getElementById('subject');
-    lessonTitleSelect = document.getElementById('lessonTitle');
 
     // Event Listeners
     sendButton.addEventListener('click', sendMessage);
@@ -58,59 +34,11 @@ document.addEventListener('DOMContentLoaded', () => {
     createLessonButton.addEventListener('click', createLesson);
     clearChatButton.addEventListener('click', clearChat);
 
-    // Cascading dropdown event listeners
-    gradeSelect.addEventListener('change', onGradeChange);
-    subjectSelect.addEventListener('change', onSubjectChange);
-
     // Renderiza as pastas e aulas salvas
     renderFolders();
 });
 
-// Funções para cascata de dropdowns
-function onGradeChange() {
-    const selectedGrade = gradeSelect.value;
-    
-    // Reset subject dropdown
-    subjectSelect.innerHTML = '<option value="">Selecione uma matéria</option>';
-    subjectSelect.disabled = !selectedGrade;
-    
-    // Reset lesson title dropdown
-    lessonTitleSelect.innerHTML = '<option value="">Primeiro selecione uma matéria</option>';
-    lessonTitleSelect.disabled = true;
-    
-    // Populate subjects based on selected grade
-    if (selectedGrade && cascadeData[selectedGrade]) {
-        const subjects = Object.keys(cascadeData[selectedGrade]);
-        subjects.forEach(subject => {
-            const option = document.createElement('option');
-            option.value = subject;
-            option.textContent = subject;
-            subjectSelect.appendChild(option);
-        });
-    }
-}
-
-function onSubjectChange() {
-    const selectedGrade = gradeSelect.value;
-    const selectedSubject = subjectSelect.value;
-    
-    // Reset lesson title dropdown
-    lessonTitleSelect.innerHTML = '<option value="">Selecione um título</option>';
-    lessonTitleSelect.disabled = !selectedSubject;
-    
-    // Populate lesson titles based on selected grade and subject
-    if (selectedGrade && selectedSubject && cascadeData[selectedGrade] && cascadeData[selectedGrade][selectedSubject]) {
-        const lessonTitles = cascadeData[selectedGrade][selectedSubject];
-        lessonTitles.forEach(title => {
-            const option = document.createElement('option');
-            option.value = title;
-            option.textContent = title;
-            lessonTitleSelect.appendChild(option);
-        });
-    }
-}
-
-// Funções originais
+// Funções
 function loadLessons() {
     const savedLessons = localStorage.getItem('homeschoolLessons');
     return savedLessons ? JSON.parse(savedLessons) : {};
@@ -121,9 +49,9 @@ function saveLessons() {
 }
 
 function createLesson() {
-    const subject = subjectSelect.value.trim();
-    const grade = gradeSelect.value.trim();
-    const title = lessonTitleSelect.value.trim();
+    const subject = document.getElementById('subject').value.trim();
+    const grade = document.getElementById('grade').value.trim();
+    const title = document.getElementById('lessonTitle').value.trim();
     const perspective = document.getElementById('perspective').value;
 
     if (!subject || !grade || !title) {

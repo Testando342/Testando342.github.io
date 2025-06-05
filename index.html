@@ -311,12 +311,6 @@
         #clearChat:hover {
             background-color: #e9ecef;
         }
-
-        select:disabled {
-            background-color: #f8f9fa;
-            color: #6c757d;
-            cursor: not-allowed;
-        }
     </style>
 </head>
 <body>
@@ -332,24 +326,42 @@
                     <div class="form-group">
                         <label for="grade">Etapa</label>
                         <select id="grade">
-                            <option value="">Selecione uma etapa</option>
                             <option value="Educação Infantil">Educação Infantil</option>
                             <option value="1º Ano">1º Ano</option>
                             <option value="2º Ano">2º Ano</option>
+                            <option value="3º Ano">3º Ano</option>
+                            <option value="4º Ano">4º Ano</option>
+                            <option value="5º Ano">5º Ano</option>
+                            <option value="6º Ano">6º Ano</option>
+                            <option value="7º Ano">7º Ano</option>
+                            <option value="8º Ano">8º Ano</option>
+                            <option value="9º Ano">9º Ano</option>
+                            <option value="Ensino Médio">Ensino Médio 1</option>
+                            <option value="Ensino Médio 2">Ensino Médio 2</option>
+                            <option value="Ensino Médio 3">Ensino Médio 3</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="subject">Matéria</label>
-                        <select id="subject" disabled>
-                            <option value="">Primeiro selecione uma etapa</option>
-                        </select>
+                        <select id="subject">
+                            <option value="Matemática">Matemática</option>
+                            <option value="Português">Português</option>
+                            <option value="História">História</option>
+                            <option value="Geografia">Geografia</option>
+                            <option value="Ciências">Ciências</option>
+                            <option value="Educação Física">Educação Física</option>
+                            <option value="Artes">Artes</option>
+                            <option value="Inglês">Inglês</option>
+                            <option value="Física">Física</option>
+                            <option value="Química">Química</option>
+                            <option value="Biologia">Biologia</option>
+                            <option value="Sociologia">Sociologia</option>
+                            <option value="Filosofia">Filosofia</option>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="lessonTitle">Título da Aula</label>
-                    <select id="lessonTitle" disabled>
-                        <option value="">Primeiro selecione uma matéria</option>
-                    </select>
+                    <input type="text" id="lessonTitle" placeholder="Ex: Frações, Revolução Industrial...">
                 </div>
                 <div class="form-group">
                     <label for="perspective">Perspectiva da Aula</label>
